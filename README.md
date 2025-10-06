@@ -72,3 +72,5 @@ filmes-series-data-lake/
 - Cada etapa do pipeline possui seu **README detalhado**, explicando o fluxo, variáveis e instruções de execução.
 
 ![image.png](assets/image.png)
+
+[1️⃣ Etapa 1](Etapa-1)
