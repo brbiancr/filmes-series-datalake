@@ -106,39 +106,6 @@ O objetivo desta etapa é complementar os dados dos Filmes e Séries, carregados
 
 ### 🧩 Passos do Processo
 
-1. Configurar as credenciais da API TMDB (chave de acesso) no `.env`.
-2. Fazer requests para os endpoints de filmes e séries.
-3. Salvar a resposta da API em arquivos JSON locais.
-4. Fazer o upload desses arquivos para o bucket S3, na pasta correspondente à camada RAW.
-
-### 📝 **Observação Importante**
-
-> ⚠️ Os arquivos .json originais não estão versionados neste repositório para evitar o armazenamento de grandes volumes de dados.
-> 
-> 
-> Eles podem ser acessados diretamente no **bucket S3** configurado para este projeto.
-> 
-> Caso deseje testar localmente, há amostras reduzidas dos dados disponíveis na pasta:
-> 
-> ```
-> data/sample/
-> ```
-> 
-> com apenas algumas linhas, para fins de demonstração.
->
-
----
-
-## 🔹 Etapa 1B – Ingestão de API
-
-Nesta etapa iremos capturar dados do TMDB via `AWS Lambda` realizando requisições para a API. Os dados coletados devem ser persistidos em Amazon S3, camada RAW Zone, mantendo o formatto da origem (JSON). 
-
-O objetivo desta etapa é complementar os dados dos Filmes e Séries, carregados na Etapa 1B, com dados oriundos do TMDB.
-
-![image.png](../assets/image%203.png)
-
-### 🧩 Passos do Processo
-
 1. Criar uma **imagem Docker** baseada no **Amazon Linux 2023** e instalar `pip` e `zip`.
 2. Instalar as bibliotecas `requests` e `python-dotenv`, compactá-las em `minha-camada.zip` e subir como **layer no AWS Lambda**.
 3. Criar a função Lambda para **consumir a API do TMDB** usando as credenciais configuradas no `.env`.
