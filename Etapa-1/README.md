@@ -126,3 +126,157 @@ O objetivo desta etapa é complementar os dados dos Filmes e Séries, carregados
 > 
 > com apenas algumas linhas, para fins de demonstração.
 >
+
+---
+
+## 🔹 Etapa 1B – Ingestão de API
+
+Nesta etapa iremos capturar dados do TMDB via `AWS Lambda` realizando requisições para a API. Os dados coletados devem ser persistidos em Amazon S3, camada RAW Zone, mantendo o formatto da origem (JSON). 
+
+O objetivo desta etapa é complementar os dados dos Filmes e Séries, carregados na Etapa 1B, com dados oriundos do TMDB.
+
+![image.png](../assets/image%203.png)
+
+### 🧩 Passos do Processo
+
+1. Criar uma **imagem Docker** baseada no **Amazon Linux 2023** e instalar `pip` e `zip`.
+2. Instalar as bibliotecas `requests` e `python-dotenv`, compactá-las em `minha-camada.zip` e subir como **layer no AWS Lambda**.
+3. Criar a função Lambda para **consumir a API do TMDB** usando as credenciais configuradas no `.env`.
+4. **Gerar arquivos JSON** com os dados de filmes e séries.
+5. Fazer **upload automático** dos arquivos para o **bucket S3**, na **camada RAW** do Data Lake.
+
+### 📝 **Observação Importante**
+
+> ⚠️ Os arquivos .json originais não estão versionados neste repositório para evitar o armazenamento de grandes volumes de dados.
+> 
+> 
+> Eles podem ser acessados diretamente no **bucket S3** configurado para este projeto.
+> 
+> Caso deseje testar localmente, há amostras reduzidas dos dados disponíveis na pasta:
+> 
+> ```
+> data/sample/
+> ```
+> 
+> com apenas algumas linhas, para fins de demonstração.
+> 
+
+### 1️⃣ Criação da Layer (Camada)
+
+Para criar a layer do Lambda, será utilizada uma imagem mínima do **Amazon Linux 2023**, garantindo compatibilidade com o ambiente do AWS Lambda.
+
+```docker
+FROM amazonlinux:2023
+
+RUN yum update -y
+RUN yum install -y \
+    python3-pip \
+    zip
+
+RUN yum -y clean all
+
+```
+
+### 2️⃣ Construção da Imagem Docker
+
+```bash
+docker build -t amazonlinuxpython39 .
+```
+
+### 3️⃣  Acessando o Container
+
+Inicie o container em modo interativo:
+
+```bash
+docker run -it amazonlinuxpython39 bash
+```
+
+### 4️⃣ Estrutura de Pastas no Container
+
+Crie as pastas que irão armazenar as dependências de layer:
+
+```bash
+cd ~
+mkdir layer_dir
+cd layer_dir/
+mkdir python
+cd python/
+pwd
+```
+
+### 5️⃣ Instalação das Dependências
+
+Dentro da pasta python, instale as bibliotecas necessárias:
+
+```bash
+pip3 install requests -t .
+pip3 install python-dotenv -t .
+```
+
+### 6️⃣ Compactação da Layer
+
+Após instalar as dependências, compacte o conteúdo:
+
+```bash
+zip -r minha-camada.zip .
+```
+
+### 7️⃣ Copiando a Layer para a Máquina Local
+
+Abra outro terminal e copie o .zip gerado do container para sua máquina local.
+
+Substitua CONTAINER_ID pelo ID do seu container:
+
+```bash
+docker cp CONTAINER_ID:/root/layer_dir/minha-camada.zip ./
+```
+
+### 8️⃣ Incluindo o Script de Upload no Container
+
+Em outro terminal:
+
+```bash
+docker exec -it CONTAINER_ID mkdir -p /root/layer_dir
+docker cp upload_s3.py CONTAINER_ID:/root/layer_dir/
+```
+
+Depois, dentro do container, compacte novamente:
+
+```bash
+cd /root/layer_dir
+zip -r minha-camada.zip .
+```
+
+E copie novamente para a máquina local: 
+
+```bash
+docker cp CONTAINER_ID:/root/layer_dir/minha-camada.zip ./
+```
+
+### 9️⃣ Upload da Layer no AWS Lambda
+
+- Acesse o **AWS Management Console**
+- Vá até **Lambda → Layers → Create layer**
+- Faça upload do arquivo `minha-camada.zip`
+- Selecione a versão do Python compatível (ex: **Python 3.9**)
+- Clique em **Create**
+
+### 1️⃣0️⃣ Criação da Função Lambd
+
+1. No console do **AWS Lambda**, crie uma nova função 
+2. Anexe a layer criada anteriormente
+3. Faça o upload do seu script `upload_s3.py`
+4. Configure as **variáveis de ambiente** listadas no `.env`:
+
+| Variável | Descrição |
+| --- | --- |
+| `NOME_DO_BUCKET_S3` | Nome do bucket S3 de destino |
+| `REGIAO_DO_BUCKET` | Região do bucket |
+| `NOME_DO_PERFIL_SSO` | Nome do perfil de autenticação |
+| `aws_access_key_id` | Chave de acesso AWS |
+| `aws_secret_access_key` | Chave secreta AWS |
+| `aws_session_token` | Token de sessão temporário |
+
+### ✅ Resultado Esperado
+
+Ao executar a função Lambda, os dados da API do TMDB serão baixados e armazenados automaticamente no bucket S3, compondo a **camada RAW** do Data Lake.
