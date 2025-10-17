@@ -51,8 +51,7 @@ df_series = (df_series
             .withColumnRenamed("tituloPincipal", "tituloPrincipal")
 )
 
-df_series = (
-    df_series
+df_series = (df_series
     .withColumn("genero", explode(split(col("genero"), r",\s*")))
     .withColumn("profissao", explode(split(col("profissao"), r",\s*")))
     .withColumn("titulosMaisConhecidos", explode(split(col("titulosMaisConhecidos"), r",\s*")))
