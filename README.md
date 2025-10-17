@@ -17,10 +17,10 @@ O desafio consiste em criar um **Data Lake de filmes e séries**, seguindo as et
     - A partir da **API do TMDB**, trazendo dados complementares em formato JSON.
 2. **Armazenamento na camada RAW**
     - Guardar os dados brutos sem alterações, preservando integridade e rastreabilidade.
-3. **Processamento e padronização (Camada Silver)**
+3. **Processamento e padronização (Camada TRUSTED)**
     - Normalizar os dados, corrigir inconsistências e catalogar em tabelas.
     - Transformar o modelo para que seja **pronto para análises e consultas**.
-4. **Processamento avançado (Camada Gold)**
+4. **Processamento avançado (Camada REFINED)**
     - Aplicar o **Apache Spark** para criar agregações, métricas e modelos dimensionais.
     - Catalogar e armazenar os dados processados para consumo final.
 5. **Consumo e análise**
@@ -74,3 +74,5 @@ filmes-series-data-lake/
 ![image.png](assets/image.png)
 
 [1️⃣ Etapa 1](Etapa-1)
+
+[2️⃣ Etapa 2](Etapa-2)
