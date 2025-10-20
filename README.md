@@ -50,6 +50,7 @@ A análise central do projeto será:
 | Boto3 | Integração com S3 |
 | Apache Spark | Processamento distribuído de dados |
 | Docker | Isolamento das pipelines |
+| Quicksight | Construção do Dashboard |
 
 ---
 
@@ -58,7 +59,11 @@ A análise central do projeto será:
 ```bash
 filmes-series-data-lake/
 │── Etapa-1/       # Ingestão CSV e API TMDB (Camada RAW)
+│── Etapa-2/       # Limpeza e padronização dos Dados (Camada TRUSTED)
+│── Etapa-3/       # Modelagem Dimensional (Camada REFINED)
+│── Etapa-4/       # Construção do Dashboard
 │── data/sample/   # Amostras de dados para testes
+│── assets/      # Imagens utilizadas nos Readmes
 │── README.md      # Este arquivo
 
 ```
@@ -76,3 +81,7 @@ filmes-series-data-lake/
 [1️⃣ Etapa 1](Etapa-1)
 
 [2️⃣ Etapa 2](Etapa-2)
+
+[3️⃣ Etapa 3](Etapa-3)
+
+[4️⃣ Etapa 4](Etapa-4)
