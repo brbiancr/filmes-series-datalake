@@ -1,5 +1,5 @@
 # 🎬 Filmes e Séries Data Lake
->   Status: Em desenvolvimento
+>   Status: Finalizado
 
 > Um projeto desenvolvido no Programa de Bolsas da Compass UOL, que simula a construção de um Data Lake completo, desde a ingestão até o consumo dos dados, com foco em aprendizado de engenharia de dados.
 > 
